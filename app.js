@@ -2,6 +2,7 @@ var express = require("express");
 var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
+var cors = require("cors");
 require("dotenv").config();
 
 // CONFIG DATABASE
@@ -16,14 +17,12 @@ var category = require("./routes/category");
 var app = express();
 
 // MIDDLEWARE
-app.use(express.static("./public/build/"));
+app.use(cors());
+
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.get("*", (req, res) => {
-  res.sendFile(__dirname + "/public/build/index.html");
-});
 
 app.use("/api", balance);
 app.use("/api/category", category);

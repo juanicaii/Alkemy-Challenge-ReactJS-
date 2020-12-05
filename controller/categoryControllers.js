@@ -4,7 +4,7 @@ const messages = require("../utils/messages");
 
 async function getCategories(req, res) {
   try {
-    const category = functions.getAllData(db.operationCategory, {});
+    const category = await functions.getAllData(db.operationCategory, {});
     if (category != null) {
       messages.returnContent(res, "Category List", category, 200);
     }
