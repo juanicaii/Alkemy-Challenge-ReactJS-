@@ -1,12 +1,11 @@
 const { Sequelize, DataTypes } = require("sequelize");
-
+const bcrypt = require("bcrypt");
 module.exports = model;
 function model(sequelize) {
   const attributes = {
     id: {
       type: DataTypes.INTEGER,
       autoIncrement: true,
-      allowNull: false,
       primaryKey: true,
     },
     name: {
@@ -19,5 +18,5 @@ function model(sequelize) {
     timestamps: false,
   };
 
-  return sequelize.define("Exchange_Type", attributes, options);
+  return sequelize.define("Category", attributes, options);
 }

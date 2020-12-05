@@ -1,10 +1,7 @@
 const { Sequelize, DataTypes } = require("sequelize");
-const ExchangeType = require("./exchangeType");
-const sequelize = require("../db/config");
-
-const MoneyBalance = sequelize.define(
-  "Money_Balance",
-  {
+module.exports = model;
+function model(sequelize) {
+  const attributes = {
     id: {
       type: DataTypes.INTEGER,
       autoIncrement: true,
@@ -30,12 +27,22 @@ const MoneyBalance = sequelize.define(
       allowNull: false,
       foreignKey: true,
     },
-  },
-  {
+    user_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      foreignKey: true,
+    },
+    category_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      foreignKey: true,
+    },
+  };
+  const options = {
     createdAt: true,
     updatedAt: false,
     underscored: true,
-  }
-);
-ExchangeType.hasOne(MoneyBalance, { foreignKey: "type_id" });
-module.exports = MoneyBalance;
+  };
+
+  return sequelize.define("Money_balance", attributes, options);
+}
