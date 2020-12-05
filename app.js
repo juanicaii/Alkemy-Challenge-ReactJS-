@@ -16,10 +16,14 @@ var category = require("./routes/category");
 var app = express();
 
 // MIDDLEWARE
+app.use(express.static("./public/build/"));
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.get("*", (req, res) => {
+  res.sendFile(__dirname + "/public/build/index.html");
+});
 
 app.use("/api", balance);
 app.use("/api/category", category);
