@@ -1,11 +1,8 @@
-function returnErrorAdmin(res, err) {
-  return (
-    res.status(500),
-    json({
-      error: true,
-      message: "Technical Error, contact an administrator",
-    })
-  );
+function returnErrorAdmin(res) {
+  return res.status(500).json({
+    error: true,
+    message: "Technical Error, contact an administrator",
+  });
 }
 
 function returnContent(res, message, content, status) {

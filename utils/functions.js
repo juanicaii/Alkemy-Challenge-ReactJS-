@@ -21,7 +21,15 @@ function createData(model, item) {
   });
 }
 function getAllData(model, where) {
-  return model.findAll({ where: where }).then((foundItem) => {
+  return model.findAll({ where: where, raw: true }).then((foundItem) => {
+    if (foundItem) {
+      return foundItem;
+    }
+    return null;
+  });
+}
+function getOneData(model, where) {
+  return model.findOne({ where: where, raw: true }).then((foundItem) => {
     if (foundItem) {
       return foundItem;
     }
@@ -34,6 +42,16 @@ function deleteData(model, where) {
     if (deletedItem == 1) {
       return true;
     }
+    return false;
+  });
+}
+
+function checkIfExist(model, where) {
+  return model.findOne({ where: where }).then((foundItem) => {
+    if (foundItem) {
+      return true;
+    }
+
     return false;
   });
 }
@@ -58,8 +76,11 @@ function getLimitData(model, where, page, size, include) {
 }
 
 function editData(model, data, where) {
-  return model.update(data, where).then((updatedItem) => {
-    console.log(updatedItem);
+  return model.update(data, { where: where }).then((updatedItem) => {
+    if (updatedItem != 0) {
+      return true;
+    }
+    return false;
   });
 }
 module.exports = {
@@ -69,4 +90,6 @@ module.exports = {
   getLimitData,
   editData,
   createData,
+  checkIfExist,
+  getOneData,
 };
