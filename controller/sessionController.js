@@ -8,6 +8,7 @@ const e = require("express");
 async function login(req, res) {
   try {
     const { email, password } = req.body;
+
     if (!req.cookies.token) {
       const user = await functions.getOneData(db.users, {
         email: email.toLowerCase(),
@@ -26,7 +27,7 @@ async function login(req, res) {
           messages.returnContent(
             res,
             "User is correctly logged in",
-            { login: true },
+            { login: true, user },
             200
           );
         } else {
@@ -79,7 +80,7 @@ async function register(req, res) {
       messages.returnContent(
         res,
         "User created successfully",
-        { created: true },
+        { created: true, user: user },
         201
       );
     } else {

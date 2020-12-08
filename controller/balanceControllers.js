@@ -4,7 +4,7 @@ const db = require("../db/config");
 
 async function getExchange(req, res) {
   try {
-    const { page, size, category, type } = req.query;
+    const { page, size, category, type, userId } = req.query;
 
     const include = [
       {
@@ -19,9 +19,10 @@ async function getExchange(req, res) {
       },
     ];
 
+    var where = userId ? { user_id: userId } : {};
     var exchange = await functions.getLimitData(
       db.moneyBalance,
-      {},
+      where,
       page,
       size,
       include
@@ -31,6 +32,69 @@ async function getExchange(req, res) {
       messages.returnContent(res, "Exchange List", exchange, 200);
     }
   } catch (err) {
+    messages.returnErrorAdmin(res);
+  }
+}
+async function getTotalBalance(req, res) {
+  try {
+    const { userId } = req.query;
+    var attributes = [
+      [db.sequelize.fn("SUM", db.sequelize.col("amount")), "TotalBalance"],
+    ];
+    var where = {};
+    if (userId) {
+      where = { user_id: userId };
+    }
+    var totalBalance = await functions.getTotalBalance(
+      db.moneyBalance,
+      attributes,
+      where
+    );
+
+    if (totalBalance != null) {
+      messages.returnContent(
+        res,
+        "Balance Total",
+        { total: totalBalance },
+        200
+      );
+    }
+  } catch (err) {
+    console.log(err);
+    messages.returnErrorAdmin(res);
+  }
+}
+
+async function getTotalType(req, res) {
+  try {
+    const { type_id } = req.params;
+    const { userId } = req.query;
+    var attributes = [
+      [
+        db.sequelize.fn("SUM", db.sequelize.col("amount")),
+        `${type_id == 1 ? "TotalIncome" : "TotalOutflow"}`,
+      ],
+    ];
+    var where = { type_id: type_id };
+    if (userId) {
+      where = { type_id: type_id, user_id: userId };
+    }
+    var totalType = await functions.getTotalBalance(
+      db.moneyBalance,
+      attributes,
+      where
+    );
+
+    if (totalType != null) {
+      messages.returnContent(
+        res,
+        `${type_id == 1 ? "Total Money Income" : "Total Money Outflow"}`,
+        { total: totalType },
+        200
+      );
+    }
+  } catch (err) {
+    console.log(err);
     messages.returnErrorAdmin(res);
   }
 }
@@ -136,4 +200,11 @@ async function deleteExchange(req, res) {
     messages.returnErrorAdmin(res);
   }
 }
-module.exports = { getExchange, createExchange, editExchange, deleteExchange };
+module.exports = {
+  getExchange,
+  createExchange,
+  editExchange,
+  deleteExchange,
+  getTotalBalance,
+  getTotalType,
+};

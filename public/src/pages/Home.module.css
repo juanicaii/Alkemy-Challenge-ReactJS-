@@ -6,7 +6,32 @@
 }
 .header{
     background: aquamarine;
-    height: 80px;
+    height: 100px;
+    -webkit-box-shadow: 10px 10px 5px -5px rgba(0,0,0,0.75);
+    -moz-box-shadow: 10px 10px 5px -5px rgba(0,0,0,0.75);
+    box-shadow: 10px 10px 5px -5px rgba(0,0,0,0.75);
+  
+ 
+
+
+   
+}
+.login{
+    float: right;
+    display:flex;
+    padding:20px;
+    margin-top: -50px;   
+    margin-right: 30px;
+    align-items: center;
+    text-align: center;
+    font-family: 'raleway';
+    font-size: 14px;
+}
+.iconLogin{
+    margin: 0 10px;
+}
+.iconLogin:hover{
+    color:grey
 }
 .footer{
     background: grey;
@@ -28,6 +53,7 @@
     font-family: 'raleway';
     font-weight: bold;
     padding-top: 10px;
+   
 }
 .containerCards{
     display:flex;

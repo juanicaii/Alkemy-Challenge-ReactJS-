@@ -8,8 +8,8 @@ const getPagination = (page, size) => {
 function createIfNotExist(model, where, item) {
   return model.findOne({ where: where }).then((foundItem) => {
     if (!foundItem) {
-      model.create(item);
-      return item;
+      var a = model.create(item);
+      return a;
     }
 
     return null;
@@ -83,6 +83,15 @@ function editData(model, data, where) {
     return false;
   });
 }
+
+function getTotalBalance(model, attributes, where) {
+  return model.findAll({ attributes, where }).then((res) => {
+    if (res) {
+      return res;
+    }
+    return null;
+  });
+}
 module.exports = {
   createIfNotExist,
   getAllData,
@@ -92,4 +101,5 @@ module.exports = {
   createData,
   checkIfExist,
   getOneData,
+  getTotalBalance,
 };

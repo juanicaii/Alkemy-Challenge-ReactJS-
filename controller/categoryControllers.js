@@ -4,11 +4,36 @@ const messages = require("../utils/messages");
 
 async function getCategories(req, res) {
   try {
-    const category = await functions.getAllData(db.operationCategory, {});
-    if (category != null) {
-      messages.returnContent(res, "Category List", category, 200);
+    const { userId } = req.query;
+    if (userId) {
+      var categoryId = await functions.getAllData(db.moneyBalance, {
+        user_id: userId,
+      });
+
+      var categories = await Promise.all(
+        categoryId.map(async (cate) => {
+          const category = await functions.getOneData(db.operationCategory, {
+            id: cate.category_id,
+          });
+          var catea = {};
+
+          catea = { ...category };
+
+          return catea;
+        })
+      );
+
+      if (categories != null) {
+        messages.returnContent(res, "Category List", categories, 200);
+      }
+    } else {
+      const category = await functions.getAllData(db.operationCategory, {});
+      if (category != null) {
+        messages.returnContent(res, "Category List", category, 200);
+      }
     }
   } catch (err) {
+    console.log(err);
     messages.returnErrorAdmin(res);
   }
 }

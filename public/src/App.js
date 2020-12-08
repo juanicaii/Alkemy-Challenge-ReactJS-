@@ -1,26 +1,41 @@
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  useHistory,
+} from "react-router-dom";
 import { useState, useEffect } from "react";
-import { RecoilRoot } from "recoil";
+import { RecoilRoot, useRecoilValue } from "recoil";
+import { Redirect } from "react-router-dom";
+import isLogin from "./store/";
 // ROUTES
 import HomePage from "./pages/Home";
 import LoginPage from "./pages/Login";
 import RegisterPage from "./pages/Register";
+
 function App() {
   const [loading, setLoading] = useState(false);
-  const [logged, setLogged] = useState(false);
 
+  let history = useHistory();
   return (
-    <Router>
+    <Router history={history}>
       <RecoilRoot>
         <div className="App">
           <Switch>
-            <Route path="/" exact>
+            <Route
+              exact
+              path="/"
+              render={() => {
+                return <Redirect exact to="/home" />;
+              }}
+            />
+            <Route exact path="/home">
               <HomePage />
             </Route>
-            <Route path="/login" exact>
+            <Route exact path="/login">
               <LoginPage />
             </Route>
-            <Route path="/register" exact>
+            <Route exact path="/register">
               <RegisterPage />
             </Route>
           </Switch>

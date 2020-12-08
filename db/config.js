@@ -27,6 +27,7 @@ async function initialize() {
   );
 
   //   MODELS
+  db.sequelize = sequelize;
   db.exchangeType = require("../models/exchangeType")(sequelize);
   db.moneyBalance = require("../models/moneyBalance")(sequelize);
   db.operationCategory = require("../models/operationCategory")(sequelize);

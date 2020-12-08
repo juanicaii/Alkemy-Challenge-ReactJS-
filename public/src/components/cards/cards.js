@@ -17,7 +17,7 @@ export default function Cards({ name, info, icon, color }) {
           <h4>{name}</h4>
         </div>
         <div style={{ backgroundColor: color }} className={styles.flipback}>
-          Total {name} : {info}
+          Total {name} : ${info}
         </div>
       </div>
     </div>

@@ -1,0 +1,29 @@
+.input{
+    border: 2px solid aquamarine;
+    border-radius: 28px;
+    width: 70%;   
+    text-align: center;
+    padding: 10px;
+}
+.input:focus{
+    outline:none;
+  
+}
+.formIcon{
+    position: absolute;
+    margin-left: 20px;
+    margin-top: 18px;
+}
+.input::placeholder{
+    text-align: center;
+    font-size: 18px;
+    color:black;
+    font-family: 'Raleway';
+    font-weight: bold;
+}
+.errorText{
+    color: red;
+    margin:0;
+    padding:0;
+    font-size: 13px;
+}

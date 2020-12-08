@@ -1,10 +1,12 @@
 import axios from "axios";
+import config from "../react.config";
 export default async function useHttp(url, method, body) {
-  var res = await axios({
+  return axios({
     method: method,
-    url: url,
+    url: `${config.URL_HOST}${url}`,
     data: body,
+    headers: { "content-type": "application/x-www-form-urlencoded" },
+  }).then((res) => {
+    return res.data.content;
   });
-
-  return res.data.content;
 }
