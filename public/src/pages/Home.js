@@ -87,8 +87,8 @@ export default function HomePage() {
                         .get(`${config.URL_HOST}/api/users/logout`)
                         .then((res) => {
                           if (res.data.content.logout) {
-                            Toast("See you soon");
                             setLogged({ logged: false, user: null });
+                            Toast("See you soon");
                           }
                         });
                     }}

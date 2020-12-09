@@ -44,7 +44,7 @@ export default function RegisterPage() {
   };
 
   if (redirect) {
-    return <Redirect to="/home" />;
+    return <Redirect to="/" />;
   } else {
     return (
       <div>
