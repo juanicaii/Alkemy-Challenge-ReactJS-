@@ -1,7 +1,7 @@
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 const MySwal = withReactContent(Swal);
-export default function Toast() {
+export default function Toast(title) {
   const Toast = MySwal.mixin({
     toast: true,
     position: "top-end",
@@ -15,6 +15,6 @@ export default function Toast() {
   });
   Toast.fire({
     icon: "error",
-    title: "Cuenta Cerrada correctamente",
+    title: title,
   });
 }

@@ -77,3 +77,16 @@
     white-space: nowrap;
 }
 }
+@media(max-width:523px){
+    .table{
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+    
+}
+@media(max-width:800px){
+    .add{
+        width: 190px;
+    }
+}

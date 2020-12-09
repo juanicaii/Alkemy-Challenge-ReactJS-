@@ -182,6 +182,7 @@ export default function Table({ data, query, logged }) {
     {
       dataField: "type.name",
       text: "Type",
+      sort: true,
     },
     {
       dataField: "category.name",

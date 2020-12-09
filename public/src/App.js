@@ -22,16 +22,10 @@ function App() {
       <RecoilRoot>
         <div className="App">
           <Switch>
-            <Route
-              exact
-              path="/"
-              render={() => {
-                return <Redirect exact to="/home" />;
-              }}
-            />
-            <Route exact path="/home">
+            <Route exact path="/">
               <HomePage />
             </Route>
+
             <Route exact path="/login">
               <LoginPage />
             </Route>

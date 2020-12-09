@@ -20,14 +20,20 @@ import axios from "axios";
 import { useRecoilState } from "recoil";
 import isLogin from "../store/";
 import config from "../react.config";
-
+import Toast from "../components/Alert/toast";
 import Loading from "../components/Loading";
 
 export default function HomePage() {
   const [logged, setLogged] = useRecoilState(isLogin);
   const [reload, setReload] = useState(false);
   const [query, setQuery] = useState("");
-
+  useEffect(() => {
+    axios.get(`${config.URL_HOST}/api/users/islogin`).then((res) => {
+      if (res.data.content.logged) {
+        setLogged(res.data.content);
+      }
+    });
+  }, []);
   const [exchange] = useHttp(
     `/api/balance${logged.logged ? `?userId=${logged.user.id} &` : ""}${query}`,
     "get",
@@ -80,7 +86,10 @@ export default function HomePage() {
                       axios
                         .get(`${config.URL_HOST}/api/users/logout`)
                         .then((res) => {
-                          console.log(res);
+                          if (res.data.content.logout) {
+                            Toast("See you soon");
+                            setLogged({ logged: false, user: null });
+                          }
                         });
                     }}
                   >
@@ -168,8 +177,21 @@ export default function HomePage() {
             className={styles.icon}
             icon={faLinkedin}
             size="3x"
+            onClick={() => {
+              window.open(
+                "https://www.linkedin.com/in/juanignacioseijas/",
+                "_blank"
+              );
+            }}
           />
-          <FontAwesomeIcon className={styles.icon} icon={faGithub} size="3x" />
+          <FontAwesomeIcon
+            onClick={() => {
+              window.open("https://github.com/juaniseijas00", "_blank");
+            }}
+            className={styles.icon}
+            icon={faGithub}
+            size="3x"
+          />
         </footer>
       </div>
     );
