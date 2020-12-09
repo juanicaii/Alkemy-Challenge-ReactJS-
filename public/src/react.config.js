@@ -1,3 +1,3 @@
 module.exports = {
-  URL_HOST: "",
+  URL_HOST: "http://localhost:8080",
 };

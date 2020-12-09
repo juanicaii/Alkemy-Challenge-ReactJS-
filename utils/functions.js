@@ -1,17 +1,20 @@
 const getPagination = (page, size) => {
-  const limit = size ? +size : 3;
+  const limit = size ? +size : 10;
   const offset = page ? page * limit : 0;
 
   return { limit, offset };
 };
 
-function createIfNotExist(model, where, item) {
+function createIfNotExist(model, where, item, returnItem) {
   return model.findOne({ where: where }).then((foundItem) => {
     if (!foundItem) {
       var a = model.create(item);
       return a;
     }
 
+    if (returnItem) {
+      return foundItem;
+    }
     return null;
   });
 }
@@ -20,21 +23,31 @@ function createData(model, item) {
     return createdItem;
   });
 }
-function getAllData(model, where) {
-  return model.findAll({ where: where, raw: true }).then((foundItem) => {
-    if (foundItem) {
-      return foundItem;
-    }
-    return null;
-  });
+function getAllData(model, where, attributes, include) {
+  return model
+    .findAll({
+      where: where,
+      attributes,
+      raw: true,
+      distinct: true,
+      include,
+    })
+    .then((foundItem) => {
+      if (foundItem) {
+        return foundItem;
+      }
+      return null;
+    });
 }
-function getOneData(model, where) {
-  return model.findOne({ where: where, raw: true }).then((foundItem) => {
-    if (foundItem) {
-      return foundItem;
-    }
-    return null;
-  });
+function getOneData(model, where, include) {
+  return model
+    .findOne({ where: where, include, raw: true })
+    .then((foundItem) => {
+      if (foundItem) {
+        return foundItem;
+      }
+      return null;
+    });
 }
 
 function deleteData(model, where) {
@@ -57,12 +70,13 @@ function checkIfExist(model, where) {
 }
 
 function getLimitData(model, where, page, size, include) {
-  var pagination = getPagination(page, size);
+  // Unused pagination system
+  //var pagination = getPagination(page, size);
   return model
     .findAndCountAll({
       where: where,
-      limit: pagination.limit,
-      offset: pagination.offset,
+      //limit: pagination.limit,
+      //offset: pagination.offset,
       include: include,
       raw: true,
     })

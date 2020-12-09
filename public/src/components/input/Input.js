@@ -4,9 +4,12 @@ import styles from "./Input.module.css";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 const Input = React.forwardRef(
-  ({ type, name, placeholder, error, icon, messageError }, ref) => {
+  (
+    { type, name, placeholder, error, icon, messageError, disabled, value },
+    ref
+  ) => {
     const [color, setColor] = useState("aquamarine");
-    const [displayIcon, setDisplayIcon] = useState(true);
+    const [displayIcon, setDisplayIcon] = useState(icon ? true : false);
     var style = {
       border: `2px solid ${color}`,
     };
@@ -27,12 +30,16 @@ const Input = React.forwardRef(
         )}
         <input
           onChange={(e) => {
-            if (e.target.value.length > 0) {
-              setDisplayIcon(false);
-            } else {
-              setDisplayIcon(true);
+            if (icon) {
+              if (e.target.value.length > 0) {
+                setDisplayIcon(false);
+              } else {
+                setDisplayIcon(true);
+              }
             }
           }}
+          disabled={disabled}
+          defaultValue={value}
           onFocus={() => {}}
           name={name}
           ref={ref}

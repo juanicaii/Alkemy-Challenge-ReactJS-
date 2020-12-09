@@ -29,33 +29,25 @@ async function getExchange(req, res) {
     );
 
     if (exchange != null) {
-      messages.returnContent(res, "Exchange List", exchange, 200);
-    }
-  } catch (err) {
-    messages.returnErrorAdmin(res);
-  }
-}
-async function getTotalBalance(req, res) {
-  try {
-    const { userId } = req.query;
-    var attributes = [
-      [db.sequelize.fn("SUM", db.sequelize.col("amount")), "TotalBalance"],
-    ];
-    var where = {};
-    if (userId) {
-      where = { user_id: userId };
-    }
-    var totalBalance = await functions.getTotalBalance(
-      db.moneyBalance,
-      attributes,
-      where
-    );
+      var categories = await functions.getAllData(
+        db.moneyBalance,
+        userId ? { user_id: userId } : {},
+        [
+          [
+            db.sequelize.fn("DISTINCT", db.sequelize.col("category_id")),
+            "category_id",
+          ],
+        ],
+        {
+          model: db.operationCategory,
+          as: "category",
+        }
+      );
 
-    if (totalBalance != null) {
       messages.returnContent(
         res,
-        "Balance Total",
-        { total: totalBalance },
+        "Exchange List",
+        { exchange, categories },
         200
       );
     }
@@ -65,6 +57,35 @@ async function getTotalBalance(req, res) {
   }
 }
 
+async function getOneExchange(req, res) {
+  try {
+    const { id } = req.params;
+    const include = [
+      {
+        model: db.exchangeType,
+        as: "type",
+        // specifies how we want to be able to access our joined rows on the returned data
+      },
+      {
+        model: db.operationCategory,
+        as: "category",
+      },
+    ];
+    var exchange = await functions.getOneData(
+      db.moneyBalance,
+      { id: id },
+      include
+    );
+
+    if (exchange != null) {
+      messages.returnContent(res, "Exchange:", exchange, 200);
+    } else {
+      messages.returnContent(res, "The exchange doesnt exist", null, 404);
+    }
+  } catch (err) {
+    messages.returnErrorAdmin(res);
+  }
+}
 async function getTotalType(req, res) {
   try {
     const { type_id } = req.params;
@@ -103,12 +124,19 @@ async function createExchange(req, res) {
   try {
     const { concept, amount, type, user, category } = req.body;
 
+    const categoryId = await functions.createIfNotExist(
+      db.operationCategory,
+      { name: category },
+      { name: category },
+      true
+    );
+
     var categoryCreated = await functions.createData(db.moneyBalance, {
       concept: concept,
       amount: amount,
       type_id: type,
       user_id: user,
-      category_id: category,
+      category_id: categoryId.id,
     });
 
     if (categoryCreated) {
@@ -122,15 +150,19 @@ async function createExchange(req, res) {
 async function editExchange(req, res) {
   try {
     const { concept, amount, type, user, category } = req.body;
+
     const { id } = req.params;
 
-    var categoryExist = await functions.checkIfExist(db.operationCategory, {
-      id: category,
-    });
+    const categoryId = await functions.createIfNotExist(
+      db.operationCategory,
+      { name: category },
+      { name: category },
+      true
+    );
     var typeExist = await functions.checkIfExist(db.exchangeType, { id: type });
     var userExist = await functions.checkIfExist(db.users, { id: user });
 
-    if (categoryExist && typeExist && userExist) {
+    if (typeExist && userExist) {
       var exchangeUpdated = await functions.editData(
         db.moneyBalance,
         {
@@ -138,7 +170,7 @@ async function editExchange(req, res) {
           amount: amount,
           type_id: type,
           user_id: user,
-          category_id: category,
+          category_id: categoryId.id,
         },
         { id: id }
       );
@@ -155,9 +187,7 @@ async function editExchange(req, res) {
       }
     } else {
       var errors = {};
-      if (!categoryExist) {
-        errors.category = true;
-      }
+
       if (!userExist) {
         errors.user = true;
       }
@@ -166,7 +196,7 @@ async function editExchange(req, res) {
       }
       messages.returnContent(
         res,
-        `The ${errors.category ? "category" : ""}${errors.type ? ",type" : ""}${
+        `The${errors.type ? ",type" : ""}${
           errors.user ? ",user" : ""
         } doesnt exist`,
         { update: false },
@@ -205,6 +235,7 @@ module.exports = {
   createExchange,
   editExchange,
   deleteExchange,
-  getTotalBalance,
+
   getTotalType,
+  getOneExchange,
 };

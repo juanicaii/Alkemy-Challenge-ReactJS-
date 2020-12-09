@@ -13,7 +13,6 @@ import Axios from "axios";
 import Alert from "../components/Alert/success";
 
 export default function RegisterPage() {
-  let history = useHistory();
   const { register, handleSubmit, errors } = useForm({ mode: "onSubmit" });
   const [loading, setLoading] = useState(false);
   const [dataUser, setDataUser] = useRecoilState(isLogin);
@@ -29,11 +28,12 @@ export default function RegisterPage() {
         data: userLogin,
       }).then((res) => {
         if (res.data.content.created) {
-          console.log(res);
+          setLoading(true);
           setDataUser({ logged: true, user: res.data.content.user });
           Alert("success", "Login System", res.data.message);
 
           setTimeout(() => {
+            setLoading(false);
             setRedirect(true);
           }, 1550);
         } else {
@@ -104,7 +104,7 @@ export default function RegisterPage() {
               </div>
 
               <div className={styles.button}>
-                <Button loading={loading} submit={onSubmit}>
+                <Button type={"submit"} loading={loading} submit={onSubmit}>
                   Sign Up
                 </Button>
               </div>

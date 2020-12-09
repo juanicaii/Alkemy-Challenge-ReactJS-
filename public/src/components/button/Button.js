@@ -1,11 +1,11 @@
 import styles from "./Button.module.css";
 import { Spinner } from "react-bootstrap";
-export default function Button({ children, submit, loading, error }) {
+export default function Button({ children, submit, loading, error, type }) {
   return (
     <button
       onClick={submit}
       disabled={error ? true : false}
-      type="submit"
+      type={type}
       className={styles.button}
     >
       {" "}

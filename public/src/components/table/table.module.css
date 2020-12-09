@@ -1,8 +1,79 @@
 .table{ 
     text-align: center;
+    table-layout: auto !important; 
     
 }
 .buttonDiv{
     display:flex;
    
+}
+.add{
+    width: 300px;
+}
+.divAdd button{
+    padding:10px;
+    width: 200px;
+    margin: 0 auto;
+}
+.formadd{
+    margin:0 auto;
+    width: 100%;
+    text-align:center;
+}
+.select {
+    position: relative;
+    display: inline-block;
+    margin-bottom: 15px;
+    width: 70%;
+}    .select select {
+        font-family: 'Raleway';
+        font-weight: bold;
+        text-align: center;
+        display: inline-block;
+        width: 100%;
+        cursor: pointer;
+        padding: 10px 16px;
+        outline: 0;
+        border: 2px solid Aquamarine;
+        border-radius: 28px;
+        background: #ffffff;
+        color: #000000;
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+    }
+        .select select::-ms-expand {
+            display: none;
+        }
+       
+        .select select:disabled {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+.select_arrow {
+    position: absolute;
+    top: 15px;
+    right: 28px;
+    width: 13px;
+    height: 13px;
+    border: solid #000000;
+    border-width: 0 4px 4px 0;
+    display: inline-block;
+    padding: 3px;
+    transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+}
+.select select:hover ~ .select_arrow,
+.select select:focus ~ .select_arrow {
+    border-color: #000000;
+}
+.select select:disabled ~ .select_arrow {
+    border-top-color: #cccccc;
+}
+@media(max-width:523px){
+.table{
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+}
 }

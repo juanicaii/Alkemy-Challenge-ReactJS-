@@ -101,6 +101,7 @@ export default function LoginPage() {
                 error={errors.password ? errors.password : false}
                 loading={loading}
                 submit={onSubmit}
+                type={"submit"}
               >
                 Log In
               </Button>

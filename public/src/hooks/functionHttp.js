@@ -7,6 +7,7 @@ export default async function useHttp(url, method, body) {
     data: body,
     headers: { "content-type": "application/x-www-form-urlencoded" },
   }).then((res) => {
+    console.log(res);
     return res.data.content;
   });
 }

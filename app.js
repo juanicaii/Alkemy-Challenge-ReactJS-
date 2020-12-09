@@ -11,7 +11,6 @@ const sequelize = require("./db/config");
 // ROUTES
 var balance = require("./routes/balance");
 var users = require("./routes/users");
-var category = require("./routes/category");
 
 // APP
 var app = express();
@@ -26,7 +25,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 app.use("/api", balance);
-app.use("/api/category", category);
+
 app.use("/api/users", users);
 
 module.exports = app;

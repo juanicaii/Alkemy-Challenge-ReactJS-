@@ -3,7 +3,8 @@ var router = express.Router();
 var balanceController = require("../controller/balanceControllers");
 
 router.get("/balance", balanceController.getExchange);
-router.get("/balance/total", balanceController.getTotalBalance);
+router.get("/exchange/:id", balanceController.getOneExchange);
+
 router.get("/moneyExchange/total/:type_id", balanceController.getTotalType);
 router.post("/moneyExchange/create", balanceController.createExchange);
 router.put("/moneyExchange/edit/:id", balanceController.editExchange);

@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import config from "../react.config";
-export default function useHttp(url, method, body) {
+export default function useHttp(url, method, body, reload) {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     axios({
       method: method,
@@ -13,7 +14,7 @@ export default function useHttp(url, method, body) {
       setLoading(false);
       setData(res.data.content);
     });
-  }, [url]);
+  }, [url, reload]);
 
   return [data];
 }

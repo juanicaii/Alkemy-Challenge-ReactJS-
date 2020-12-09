@@ -15,7 +15,7 @@ import Table from "../components/table";
 import useHttp from "../hooks/useHttp";
 import useGetTotal from "../hooks/useGetTotal";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, React } from "react";
 import axios from "axios";
 import { useRecoilState } from "recoil";
 import isLogin from "../store/";
@@ -25,43 +25,36 @@ import Loading from "../components/Loading";
 
 export default function HomePage() {
   const [logged, setLogged] = useRecoilState(isLogin);
+  const [reload, setReload] = useState(false);
   const [query, setQuery] = useState("");
-  const [category] = useHttp(
-    `/api/category${logged.logged ? `?userId=${logged.user.id} &` : ""}`,
-    "get"
-  );
+
   const [exchange] = useHttp(
     `/api/balance${logged.logged ? `?userId=${logged.user.id} &` : ""}${query}`,
-    "get"
+    "get",
+    {},
+    reload
   );
-  console.log(logged);
-  const [totalBalance] = useGetTotal(
-    `/api/balance/total${logged.logged ? `?userId=${logged.user.id}` : ""}`,
-    "get"
-  );
+
   const [totalIncome] = useGetTotal(
     `/api/moneyExchange/total/1${
       logged.logged ? `?userId=${logged.user.id}` : ""
     }`,
-    "get"
+    "get",
+    {},
+    reload
   );
   const [totalOutflow] = useGetTotal(
     `/api/moneyExchange/total/2${
       logged.logged ? `?userId=${logged.user.id}` : ""
     }`,
-    "get"
+    "get",
+    {},
+    reload
   );
 
-  var info = {};
-
-  if (exchange && category && totalBalance && totalIncome && totalOutflow) {
-    info = {
-      balance: totalBalance.TotalBalance ? totalBalance.TotalBalance : 0,
-      ingresos: totalIncome.TotalIncome ? totalIncome.TotalIncome : 0,
-      egresos: totalOutflow.TotalOutflow ? totalOutflow.TotalOutflow : 0,
-    };
+  if (exchange && totalIncome && totalOutflow) {
     return (
-      <>
+      <div>
         <header className={styles.header}>
           <div>
             {" "}
@@ -83,6 +76,7 @@ export default function HomePage() {
                   <FontAwesomeIcon icon={faUser} />
                   <a
                     onClick={() => {
+                      setReload(true);
                       axios
                         .get(`${config.URL_HOST}/api/users/logout`)
                         .then((res) => {
@@ -104,7 +98,7 @@ export default function HomePage() {
               <Cards
                 name="Income"
                 icon={faMoneyBill}
-                info={info.ingresos}
+                info={totalIncome.TotalIncome ? totalIncome.TotalIncome : 0}
                 color={"green"}
               />
             </div>
@@ -112,7 +106,7 @@ export default function HomePage() {
               <Cards
                 name="Balance"
                 icon={faCashRegister}
-                info={info.balance}
+                info={totalIncome.TotalIncome - totalOutflow.TotalOutflow}
                 color={"black"}
               />
             </div>
@@ -120,7 +114,7 @@ export default function HomePage() {
               <Cards
                 name="Outflow"
                 icon={faReceipt}
-                info={info.egresos}
+                info={totalOutflow.TotalOutflow ? totalOutflow.TotalOutflow : 0}
                 color={"red"}
               />
             </div>
@@ -132,20 +126,21 @@ export default function HomePage() {
             <div className={styles.moneyexchange}>
               <div className={styles.category}>
                 <h6>Categories</h6>
-                {category.map((cate, i) => {
+                {exchange.categories.map((cate, i) => {
+                  console.log();
                   return (
                     <p
                       key={i}
                       onClick={async () => {
                         if (logged.logged) {
-                          setQuery(`category=${cate.id}`);
+                          setQuery(`category=${cate["category.id"]}`);
                         } else {
-                          setQuery(`/?category=${cate.id}`);
+                          setQuery(`/?category=${cate["category.id"]}`);
                         }
                       }}
                       className={styles.category}
                     >
-                      {cate.name}
+                      {cate["category.name"]}
                     </p>
                   );
                 })}
@@ -159,7 +154,11 @@ export default function HomePage() {
                 </p>
               </div>
               <div className={styles.table}>
-                <Table query={setQuery} data={exchange.rows} />
+                <Table
+                  logged={logged}
+                  query={setReload}
+                  data={exchange.exchange.rows}
+                />
               </div>
             </div>
           </section>
@@ -172,7 +171,7 @@ export default function HomePage() {
           />
           <FontAwesomeIcon className={styles.icon} icon={faGithub} size="3x" />
         </footer>
-      </>
+      </div>
     );
   } else {
     return <Loading />;
